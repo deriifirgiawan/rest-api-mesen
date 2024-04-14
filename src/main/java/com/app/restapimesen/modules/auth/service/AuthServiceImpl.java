@@ -81,4 +81,23 @@ public class AuthServiceImpl implements AuthService {
         loginResponse.setToken(jwtToken);
         return loginResponse;
     }
+
+    @Override
+    public boolean checkEmailAvailable(String email) {
+        return userRepository.findUserByEmail(email).isPresent();
+    }
+
+    @Override
+    public String changePassword(String email, String password) {
+        var user = userRepository.findUserByEmail(email).orElseThrow();
+
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with email: " + email + " Not Found");
+        }
+
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+
+        return "Success Change Password";
+    }
 }
