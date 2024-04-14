@@ -1,6 +1,5 @@
 package com.app.restapimesen.entity.stores;
 
-import com.app.restapimesen.entity.user.Users;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
