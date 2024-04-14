@@ -4,6 +4,7 @@ import com.app.restapimesen.entity.user.Users;
 import com.app.restapimesen.models.WebResponse;
 import com.app.restapimesen.modules.admin.models.AddEmployeeRequest;
 import com.app.restapimesen.modules.admin.models.AddStoreRequest;
+import com.app.restapimesen.modules.admin.models.UserResponse;
 import com.app.restapimesen.modules.admin.service.AdminService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Validator;
@@ -54,13 +55,13 @@ public class AdminController {
 
     @GetMapping(path = "/employee/all")
     @ResponseStatus(HttpStatus.OK)
-    public WebResponse<List<Users>> getAllEmployee(
+    public WebResponse<List<UserResponse>> getAllEmployee(
             @RequestParam(name = "store_id") String store_id
     ) {
         var users = adminService.getAllEmployee(store_id);
 
 
-        return WebResponse.<List<Users>>builder()
+        return WebResponse.<List<UserResponse>>builder()
                 .status(HttpStatus.OK)
                 .message("Success Get All Employee")
                 .data(users)

@@ -8,4 +8,8 @@ public interface AuthService {
     String register(RegisterRequest request);
 
     LoginResponse login(LoginRequest request);
+
+    boolean checkEmailAvailable(String email);
+
+    String changePassword(String email, String password);
 }

@@ -6,6 +6,7 @@ import com.app.restapimesen.entity.stores.Stores;
 import com.app.restapimesen.entity.user.Users;
 import com.app.restapimesen.modules.admin.models.AddEmployeeRequest;
 import com.app.restapimesen.modules.admin.models.AddStoreRequest;
+import com.app.restapimesen.modules.admin.models.UserResponse;
 import com.app.restapimesen.repository.RoleRepository;
 import com.app.restapimesen.repository.StoreRepository;
 import com.app.restapimesen.repository.UserRepository;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -83,7 +85,24 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<Users> getAllEmployee(String store_id) {
-        return userRepository.findUsersByStoreId(store_id);
+    public List<UserResponse> getAllEmployee(String store_id) {
+        var users = userRepository.findUsersByStoreId(store_id);
+        List<UserResponse> responses = new ArrayList<>();
+
+        try {
+            int i = 0;
+            while (i < users.size()) {
+                responses.get(i).setName(users.get(i).getName());
+                responses.get(i).setEmail(users.get(i).getEmail());
+                responses.get(i).setPosition(users.get(i).getPosition());
+                responses.get(i).setRole(users.get(i).getRole());
+
+                responses.add(responses.get(i));
+            }
+        } catch (Exception error) {
+            System.out.println(error.getMessage());
+        }
+
+        return responses;
     }
 }
