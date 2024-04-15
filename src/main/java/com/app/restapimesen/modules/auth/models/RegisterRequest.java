@@ -33,4 +33,6 @@ public class RegisterRequest {
     @NotNull(message = "role_name must not be null", groups = RequiredProperties.class)
     @Valid
     private String role_name;
+
+    private String position;
 }

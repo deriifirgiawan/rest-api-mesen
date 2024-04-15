@@ -6,7 +6,7 @@ import com.app.restapimesen.entity.stores.Stores;
 import com.app.restapimesen.entity.user.Users;
 import com.app.restapimesen.modules.admin.models.AddEmployeeRequest;
 import com.app.restapimesen.modules.admin.models.AddStoreRequest;
-import com.app.restapimesen.modules.admin.models.UserResponse;
+import com.app.restapimesen.modules.admin.models.UpdateEmployeeRequest;
 import com.app.restapimesen.repository.RoleRepository;
 import com.app.restapimesen.repository.StoreRepository;
 import com.app.restapimesen.repository.UserRepository;
@@ -17,8 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -85,24 +85,50 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<UserResponse> getAllEmployee(String store_id) {
-        var users = userRepository.findUsersByStoreId(store_id);
-        List<UserResponse> responses = new ArrayList<>();
+    public List<Users> getAllEmployee(String store_id) {
+        return userRepository.findUsersByStoreId(store_id);
+    }
 
-        try {
-            int i = 0;
-            while (i < users.size()) {
-                responses.get(i).setName(users.get(i).getName());
-                responses.get(i).setEmail(users.get(i).getEmail());
-                responses.get(i).setPosition(users.get(i).getPosition());
-                responses.get(i).setRole(users.get(i).getRole());
+    @Override
+    public String updateEmployee(UpdateEmployeeRequest request) {
+        var store = storeRepository.findById(request.getStore_id());
+        var user = userRepository.findById(request.getUser_id());
 
-                responses.add(responses.get(i));
-            }
-        } catch (Exception error) {
-            System.out.println(error.getMessage());
+        if (store.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Store Not Found");
         }
 
-        return responses;
+        if (user.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
+        }
+
+        if (!Objects.equals(user.get().getStores().getId(), store.get().getId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This is not your Employee!!!");
+        }
+
+        user.get().setName(request.getName());
+        user.get().setPosition(request.getPosition());
+
+        userRepository.save(user.get());
+
+        return "Success Edited Your Employee";
+    }
+
+    @Override
+    public String deleteEmployeeById(String employee_id, String admin_id) {
+        var users = userRepository.findById(admin_id);
+        var employee = userRepository.findById(employee_id);
+
+        if (employee.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Employee with id: " + employee_id + " Not Found");
+        }
+
+        if (!Objects.equals(users.get().getStores().getId(), employee.get().getStores().getId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This is not your employee");
+        }
+
+        userRepository.delete(employee.get());
+
+        return "Success Deleted One Employee";
     }
 }
