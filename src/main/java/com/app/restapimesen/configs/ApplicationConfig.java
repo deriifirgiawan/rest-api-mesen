@@ -50,5 +50,7 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public GenerateListProduct generateListProduct() {return new GenerateListProduct();}
+    public GenerateListProduct generateListProduct() {
+        return new GenerateListProduct();
+    }
 }

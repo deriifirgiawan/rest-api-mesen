@@ -62,7 +62,7 @@ public class ProductMvRepository {
                     .setParameter("categoryIds", request.getCategories().get())
                     .getResultList();
         }
-        
+
         if (request.getCategories().isPresent() && request.getPrice().isPresent()) {
             String query = getQuery(request);
             results = entityManager.createNativeQuery(query)

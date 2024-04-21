@@ -73,7 +73,7 @@ public class AdminController {
     @ResponseStatus(HttpStatus.OK)
     public WebResponse<String> updateEmployee(
             @RequestBody UpdateEmployeeRequest request
-    ){
+    ) {
         validator.validate(request);
 
         var response = adminService.updateEmployee(request);

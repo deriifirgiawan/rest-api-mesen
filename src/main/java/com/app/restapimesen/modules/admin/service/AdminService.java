@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface AdminService {
     String addEmployee(AddEmployeeRequest request);
+
     String addStore(AddStoreRequest request);
 
     List<UserMaterializedView> getAllEmployee(String store_id);

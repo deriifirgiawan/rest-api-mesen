@@ -50,7 +50,7 @@ public class ProductController {
         requestPayload.setPrice(price);
 
         var response = productService.getAllProductsByStoreId(requestPayload);
-        return  WebResponse.<List<ProductMv>>builder()
+        return WebResponse.<List<ProductMv>>builder()
                 .status(HttpStatus.CREATED)
                 .message("Success Get All Your Products")
                 .data(response)
@@ -71,7 +71,7 @@ public class ProductController {
 
         var response = productService.addProduct(request, userId);
 
-        return  WebResponse.<Products>builder()
+        return WebResponse.<Products>builder()
                 .status(HttpStatus.CREATED)
                 .message("Success Add Product")
                 .data(response)
@@ -91,7 +91,7 @@ public class ProductController {
 
         var response = productService.updateProductById(request, product_id);
 
-        return  WebResponse.<Products>builder()
+        return WebResponse.<Products>builder()
                 .status(HttpStatus.CREATED)
                 .message("Success Updated Product")
                 .data(response)
@@ -110,7 +110,7 @@ public class ProductController {
 
         var response = productService.deleteProductById(product_id);
 
-        return  WebResponse.<String>builder()
+        return WebResponse.<String>builder()
                 .status(HttpStatus.CREATED)
                 .message("Success Deleted Product")
                 .data(response)

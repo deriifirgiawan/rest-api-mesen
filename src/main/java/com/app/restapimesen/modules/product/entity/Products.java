@@ -53,11 +53,11 @@ public class Products {
     @JsonIgnore
     private Stores stores;
 
-    @ManyToMany(cascade = { CascadeType.ALL })
+    @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
             name = "product_category",
-            joinColumns = { @JoinColumn(name = "product_id") },
-            inverseJoinColumns = {@JoinColumn(name = "category_id") }
+            joinColumns = {@JoinColumn(name = "product_id")},
+            inverseJoinColumns = {@JoinColumn(name = "category_id")}
     )
     private List<Category> categories = new ArrayList<>();
 
