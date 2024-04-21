@@ -2,12 +2,14 @@ package com.app.restapimesen.entity.user;
 
 import com.app.restapimesen.entity.role.Role;
 import com.app.restapimesen.entity.stores.Stores;
+import com.app.restapimesen.modules.product.entity.Products;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +24,14 @@ import java.util.List;
 @Entity(name = "users")
 public class Users implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "uuid_sequence")
+    @GenericGenerator(
+            name = "uuid_sequence",
+            strategy = "org.hibernate.id.UUIDGenerator",
+            parameters = {
+                    @org.hibernate.annotations.Parameter(name = "uuid_gen_strategy_class", value = "org.hibernate.id.uuid.CustomVersionOneStrategy")
+            }
+    )
     private String id;
 
     @Column(name = "name", nullable = false)
@@ -45,6 +54,9 @@ public class Users implements UserDetails {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "store_id")
     private Stores stores;
+
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    private List<Products> products;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

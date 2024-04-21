@@ -1,5 +1,6 @@
 package com.app.restapimesen.entity.stores;
 
+import com.app.restapimesen.modules.product.entity.Products;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @Builder
@@ -32,4 +34,8 @@ public class Stores {
 
     @Column(name = "number_of_tables", nullable = false)
     private Long numberOfTables;
+
+
+    @OneToMany(mappedBy = "stores", cascade = CascadeType.ALL)
+    private List<Products> products;
 }

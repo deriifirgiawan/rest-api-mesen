@@ -3,15 +3,20 @@ package com.app.restapimesen.modules.admin.service;
 import com.app.restapimesen.entity.role.Role;
 import com.app.restapimesen.entity.role.TypeRole;
 import com.app.restapimesen.entity.stores.Stores;
+import com.app.restapimesen.entity.user.UserMaterializedView;
 import com.app.restapimesen.entity.user.Users;
+import com.app.restapimesen.events.user.UserInsertEvent;
 import com.app.restapimesen.modules.admin.models.AddEmployeeRequest;
 import com.app.restapimesen.modules.admin.models.AddStoreRequest;
 import com.app.restapimesen.modules.admin.models.UpdateEmployeeRequest;
 import com.app.restapimesen.repository.RoleRepository;
 import com.app.restapimesen.repository.StoreRepository;
+import com.app.restapimesen.repository.UserMvRepository;
 import com.app.restapimesen.repository.UserRepository;
 import com.app.restapimesen.utils.FormatTime;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,6 +33,10 @@ public class AdminServiceImpl implements AdminService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final StoreRepository storeRepository;
+    private final UserMvRepository userMvRepository;
+
+    @Autowired
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     public String addEmployee(AddEmployeeRequest request) {
@@ -59,6 +68,8 @@ public class AdminServiceImpl implements AdminService {
 
         userRepository.save(user);
 
+        applicationEventPublisher.publishEvent(new UserInsertEvent(user));
+
         return "Success Registration Employee";
     }
 
@@ -79,14 +90,16 @@ public class AdminServiceImpl implements AdminService {
         stores.setNumberOfTables(Long.valueOf(request.getNumber_of_tables()));
 
         storeRepository.save(stores);
+        users.get().setStores(stores);
 
+        userRepository.save(users.get());
 
         return "Success Configuration Store";
     }
 
     @Override
-    public List<Users> getAllEmployee(String store_id) {
-        return userRepository.findUsersByStoreId(store_id);
+    public List<UserMaterializedView> getAllEmployee(String store_id) {
+        return userMvRepository.findAllByStoreId(store_id);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.app.restapimesen.configs;
 
+import com.app.restapimesen.modules.product.libs.GenerateListProduct;
 import com.app.restapimesen.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -42,4 +43,12 @@ public class ApplicationConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public MaterializedViewConfig materializedViewConfig() {
+        return new MaterializedViewConfig();
+    }
+
+    @Bean
+    public GenerateListProduct generateListProduct() {return new GenerateListProduct();}
 }
