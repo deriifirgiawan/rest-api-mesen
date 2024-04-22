@@ -1,6 +1,7 @@
 package com.app.restapimesen.entity.stores;
 
 import com.app.restapimesen.modules.product.entity.Products;
+import com.app.restapimesen.modules.transaction.entity.Transaction;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,7 +36,9 @@ public class Stores {
     @Column(name = "number_of_tables", nullable = false)
     private Long numberOfTables;
 
-
     @OneToMany(mappedBy = "stores", cascade = CascadeType.ALL)
     private List<Products> products;
+
+    @OneToMany(mappedBy = "stores", cascade = CascadeType.ALL)
+    private List<Transaction> transactions;
 }
